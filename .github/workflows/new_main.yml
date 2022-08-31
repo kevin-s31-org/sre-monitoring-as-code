@@ -16,16 +16,19 @@ jobs:
       security-events: write
     runs-on: ubuntu-latest
     steps:
-    - name: snyk install 
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-    - run: npm install snyk -g # install snyk
-    - run: snyk -v
-    - run: snyk auth ${{ secrets.snyk_token }} # snyk authentication using GH secrets
-    - name: snyk container test 
-      run: snyk container test ghcr.io/ho-cto/sre-monitoring-as-code:75d4a190e109a620b331d182f9e89fbf60190134 --app-vulns --nested-jars-depth=5 --file=./monitoring-as-code/Dockerfile
-    - name: Upload results to Github Code scanning 
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: snyk.sarif
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm i -g snyk
+      - run: snyk auth ${{ secrets.SNYK_TOKEN }}
+      - name: Snyk Container Scanning
+        run: snyk container test --app-vulns --nested-jars-depth=5 --file=./monitoring-as-code/Dockerfile --sarif-file-output=snyk-container.sarif ghcr.io/ho-cto/sre-monitoring-as-code:75d4a190e109a620b331d182f9e89fbf60190134
+        continue-on-error: true
+      - name: Upload results to GitHub Container Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk-container.sarif
