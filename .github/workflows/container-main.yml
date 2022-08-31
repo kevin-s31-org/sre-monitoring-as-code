@@ -11,7 +11,7 @@ jobs:
     - name: snyk container test
       uses: snyk/actions/golang@master
       with:
-        args: --container ghcr.io/ho-cto/sre-monitoring-as-code:75d4a190e109a620b331d182f9e89fbf60190134 --file=./monitoring-as-code/Dockerfile --sarif-file-output=hello.sarif
+        args: --container ghcr.io/ho-cto/sre-monitoring-as-code:75d4a190e109a620b331d182f9e89fbf60190134 --file=./monitoring-as-code/Dockerfile --sarif-file-output=snyk.sarif
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       continue-on-error: true
@@ -20,4 +20,4 @@ jobs:
     - name: Upload result to GitHub Code Scanning
       uses: github/codeql-action/upload-sarif@v2
       with:
-        sarif_file: hello.sarif
+        sarif_file: snyk.sarif
