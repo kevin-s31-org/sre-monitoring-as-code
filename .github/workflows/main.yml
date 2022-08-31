@@ -1,8 +1,20 @@
 
 name: Snyk Container
-on: push
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
+  schedule:
+    - cron: '31 1 * * 1'
+permissions: 
+  contents: read
 jobs:
   snyk:
+    permissions:
+      contents: read
+      security-events: write
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
