@@ -11,9 +11,8 @@ jobs:
     - name: snyk container test
       uses: snyk/actions/golang@master
       with:
-        snyk-version: 1.993.0
         image: ghcr.io/ho-cto/sre-monitoring-as-code:75d4a190e109a620b331d182f9e89fbf60190134 
-        args: container --app-vulns --nested-jars-depth=5 --sarif-file-output=snyk.sarif
+        args: --container --app-vulns --nested-jars-depth=5 --sarif-file-output=snyk.sarif
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       continue-on-error: true
