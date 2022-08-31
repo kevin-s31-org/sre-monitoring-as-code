@@ -18,6 +18,7 @@ jobs:
       run: snyk container test ghcr.io/ho-cto/sre-monitoring-as-code:75d4a190e109a620b331d182f9e89fbf60190134 --app-vulns --nested-jars-depth=5 --file=./monitoring-as-code/Dockerfile --sarif-file-output=snyk.sarif
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      continue-on-error: true
     - name: check runner
       run: ls -lrt
     - name: Upload result to GitHub Code Scanning
