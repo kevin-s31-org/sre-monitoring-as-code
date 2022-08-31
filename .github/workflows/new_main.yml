@@ -18,15 +18,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js for installing Snyk
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - name: install snyk
-        run: |
-           npm install snyk -g
-           snyk auth ${{ secrets.SNYK_TOKEN }}
+          node-version: 18.4
+
+      # Install & prepare Snyk
+      - run: npm install --location=global snyk
+
+        #  This OPTIONAL step will configure the Snyk CLI to connect to the EU instance of Snyk
+        #- run: snyk config set use-base64-encoding=true
+        #- run: snyk config set endpoint='https://app.eu.snyk.io/api'
+
+      - run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
       - name: use snyk
         run: | 
           snyk container test ghcr.io/ho-cto/sre-monitoring-as-code:75d4a190e109a620b331d182f9e89fbf60190134 --app-vulns --nested-jars-depth=5 --file=./monitoring-as-code/Dockerfile --sarif-file-output=snyk.sarif
