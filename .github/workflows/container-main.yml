@@ -6,8 +6,11 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - uses: snyk/actions/setup@master
-    - name: run snyk container
       id: snyk
+    - uses: actions/setup-go@v1
+      with:
+        go-version: "1.13"
+    - name: snyk container test
       with:
         snyk-version: 1.993.0
         image: ghcr.io/ho-cto/sre-monitoring-as-code:75d4a190e109a620b331d182f9e89fbf60190134 
@@ -15,9 +18,6 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       continue-on-error: true
-    - uses: actions/setup-go@v1
-      with:
-        go-version: "1.13"
     - name: check runner
       run: ls -lrt
     - name: Upload result to GitHub Code Scanning
