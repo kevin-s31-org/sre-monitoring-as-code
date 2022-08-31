@@ -28,7 +28,7 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         image: ghcr.io/ho-cto/sre-monitoring-as-code:75d4a190e109a620b331d182f9e89fbf60190134
-        args:  --app-vulns --nested-jars-depth=5 --severity-threshold=medium
+        args:  --app-vulns --nested-jars-depth=5 --severity-threshold=medium --file=/monitoring-as-code/Dockerfile 
     - name: Upload result to GitHub Code Scanning
       uses: github/codeql-action/upload-sarif@v2
       with:
